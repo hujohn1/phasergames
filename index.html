@@ -29,44 +29,49 @@
 
             var score = 10;
             var scoreText;
-            var circle;
+           
 
             function preload(){
             }
 
             function create(){
-                //define statics
-                circle = this.matter.add.circle(200, 200, 20, {
-                    isStatic: true,
-                    render: {
-                        fillStyle: '#FFFFFF'
-                    }
-                });
-                ball = this.matter.add.circle(200, 200, 20, {
-                    isStatic: false,
-                    render: {
-                        fillStyle: '##FF2D00'
-                    }
-                });
-                
-                var circles = this.add.group({
-                    classType: Phaser.Physics.Matter.Image, 
-                    runChildUpdate: true
-                });
-                for(let i=0; i<2; i++){
-                    
-                }
+                //define statics;
 
-
-                
                 let graphics = this.add.graphics();
                 graphics.clear();
                 graphics.lineStyle(2, 0xFFFFFF);
                 graphics.fillStyle(0xFFFFFF, 1);
-                graphics.fillCircle(200, 200, 20);
-                graphics.strokeCircle(200, 200, 20);
 
+                var circles = this.add.group({
+                    classType: Phaser.GameObjects.Graphics, 
+                    runChildUpdate: true
+                });
+
+                const LOWERNUM = 10; 
+                const VSPACING = 50; 
+                const HSPACING = 50;
+                const BALLRADIUS = 5;
+                var NUMBALLS;
+                for(let lvl = 0; lvl < 10; lvl++){
+                    NUMBALLS = LOWERNUM-lvl;
+                    for(let i=-NUMBALLS/2; i<NUMBALLS/2+1; i++){
+                        graphics.fillCircle(300+HSPACING*i, 500-VSPACING*lvl, BALLRADIUS);
+                        let circle = this.matter.add.circle(300+HSPACING*i, 500-VSPACING*lvl, {
+                            restitution: 0.7
+                        });
+                        circles.add(circle);
+                    }
+                }
+                const BOXSIZE = 30;
+                for(let i=-5; i<6; i++){
+                    let color = Phaser.Display.Color.GetColor(255-Math.abs(i)*20, 30*(5-Math.abs(i)), 0, 1);
+                    graphics.fillStyle(color);
+                    graphics.fillRect(300+HSPACING*i-BOXSIZE/2, 520, 30, BOXSIZE);
+                }
                 scoreText = this.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#FFFFFF'});
+                
+                //Collision physics
+                this.matter.world.colliders.add(circles, balls);
             }
 
             function update(){
