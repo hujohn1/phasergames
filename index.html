@@ -1,52 +1,78 @@
 <!DOCTYPE html>
 
-<html lang = "en-US">
+<html>
     <head>
-        <meta charset = 'UTF-8'/>
-        <title>Pojer basic</title>
-        <style>
-
-        </style>
-        
+        <title> Plinko Clone </title>
     </head>
     <body>
-        <canvas id="backgroundpaint" width="800" height="600"></canvas>
-
         <script src = "./phaser.min.js"></script>
-    <script>
-        var config = {
-            type: Phaser.AUTO, 
-            width: 800, 
-            height: 600, 
-            parent: 'backgroundpaint',
-            scene: {
-                preload: preload, 
-                create: create, 
-                update: update
+        <script>
+            var config = {
+                type: Phaser.AUTO, 
+                width: 600, 
+                height: 600, 
+                backgroundColor: '#13222e',
+                physics: {
+                    default: 'matter', 
+                    matter: {
+                        gravity: {x: 0, y: 0.5},
+                        debug: true
+                    }
+                }, 
+                scene: {
+                    preload: preload,
+                    create: create,
+                    update: update
+                }
             }
-        }
-        const game = new Phaser.Game(config);
+            const game = new Phaser.Game(config);
 
-        function preload(){
-            this.load.image('sky', 'assets/sky.png');
-            this.load.image('ground', 'assets/platform.png');
-            this.load.image('star', 'assets/star.png');
-            this.load.image('bomb', 'assets/bomb.png');
-            this.load.spritesheet(
-                'dude', 
-                'assets/dude.png', {
-                frameWidth: 32, frameHeight: 48}
-            );
-        }
-        function create(){
-            this.add.image(400, 300, 'sky');
-            
-        }
-        function update(){
-            
-        }
-    </script>
+            var score = 10;
+            var scoreText;
+            var circle;
+
+            function preload(){
+            }
+
+            function create(){
+                //define statics
+                circle = this.matter.add.circle(200, 200, 20, {
+                    isStatic: true,
+                    render: {
+                        fillStyle: '#FFFFFF'
+                    }
+                });
+                ball = this.matter.add.circle(200, 200, 20, {
+                    isStatic: false,
+                    render: {
+                        fillStyle: '##FF2D00'
+                    }
+                });
+                
+                var circles = this.add.group({
+                    classType: Phaser.Physics.Matter.Image, 
+                    runChildUpdate: true
+                });
+                for(let i=0; i<2; i++){
+                    
+                }
 
 
+                
+                let graphics = this.add.graphics();
+                graphics.clear();
+                graphics.lineStyle(2, 0xFFFFFF);
+                graphics.fillStyle(0xFFFFFF, 1);
+                graphics.fillCircle(200, 200, 20);
+                graphics.strokeCircle(200, 200, 20);
+
+                scoreText = this.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#FFFFFF'});
+            }
+
+            function update(){
+                scoreText.setText('$:' + score);
+            }
+        </script>
     </body>
+
 </html>
